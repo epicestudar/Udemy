@@ -14,7 +14,7 @@ include_once("templates/header.php");
     </div>
     <div class="form-group">
         <label for="phone">Telefone do Contato</label>
-        <input type="number" name="phone" id="phone" class="form-control" placeholder="Insira o telefone do usuário" required>
+        <input type="text" name="phone" id="phone" class="form-control" placeholder="Insira o telefone do usuário" required>
     </div>
     <div class="form-group">
         <label for="observations">Observações</label>
