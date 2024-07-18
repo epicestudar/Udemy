@@ -1,7 +1,16 @@
 <?php
 
   require_once("db.php");
+  require_once("models/Message.php");
 
+  $message = new Message();
+
+  $flashMessage = $message->getMessage();
+
+  if(!empty($flashMessage["msg"])) {
+
+    $message->clearMessage();
+  }
 ?>
 
 <!DOCTYPE html>
@@ -43,3 +52,9 @@
       </div>
     </nav>
   </header>
+
+  <?php if(!empty($flashMessage["msg"])): ?>
+    <div class="msg-container">
+      <p class="msg" <?= $flashMessage["type"] ?> ><?= $flashMessage["msg"] ?></p>
+    </div>
+    <?php endif; ?>
