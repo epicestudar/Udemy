@@ -7,6 +7,8 @@
 
   $message = new Message();
 
+  $userDAO = new UserDAO($conn);
+
 //   Resgata o tipo de formulario
 
 $type = filter_input(INPUT_POST, "type");
@@ -22,7 +24,29 @@ if($type === "register") {
 
     // Verificação de dados minimos 
     if($name && $lastname && $email && $password) {
+      if($password === $confirmPassword) {
+        if($userDAO->findByEmail($email) === false) {
+          $user = new User();
 
+          $userToken = $user->generateToken();
+
+          $finalPassword = $user->generatePassword($password);
+
+          $user->name = $name;
+          $user->lastname = $lastname;
+          $user->email = $email;
+          $user->password = $finalPassword;
+          $user->token = $userToken;
+
+          $auth = true;
+
+          $userDAO->create($user, $auth);
+        } else{
+          $message->setMessage("Email já cadastrado, por favor tente outro email", "error", "back");
+        }
+      } else{
+        $message->setMessage("As senhas não são iguais", "error", "back");
+      }
     } else{
         // Msg de erro para os dados faltantes
         $message->setMessage("Por favor, preencha todos os campos", "error", "back");

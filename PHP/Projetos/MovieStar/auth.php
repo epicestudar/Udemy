@@ -41,7 +41,7 @@ require_once("templates/header.php");
           </div>
           <div class="form-group">
             <label for="confirmPassword">Confirme sua senha:</label>
-            <input type="text" class="form-control" placeholder="Confirme sua senha" id="confirmPassword" name="confirmPassword">
+            <input type="password" class="form-control" placeholder="Confirme sua senha" id="confirmPassword" name="confirmPassword">
           </div>
           <input type="submit" class="btn card-btn" value="Registrar">
         </form>
