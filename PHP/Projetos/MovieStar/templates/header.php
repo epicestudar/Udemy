@@ -1,25 +1,31 @@
 <?php
 
-  require_once("db.php");
-  require_once("models/Message.php");
+require_once("db.php");
+require_once("models/Message.php");
+require_once("dao/UserDAO.php");
 
-  $message = new Message();
+$message = new Message();
 
-  $flashMessage = $message->getMessage();
+$flashMessage = $message->getMessage();
 
-  if(!empty($flashMessage["msg"])) {
+if (!empty($flashMessage["msg"])) {
 
-    $message->clearMessage();
-  }
+  $message->clearMessage();
+}
+
+$userDAO = new UserDAO($conn);
+
+$userData = $userDAO->verifyToken(false);
 ?>
 
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>MovieStar</title>
-  <link rel="short icon" href="img/moviestar.ico"/>
+  <link rel="short icon" href="img/moviestar.ico" />
   <!-- Bootstrap -->
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.5.3/css/bootstrap.css" integrity="sha512-drnvWxqfgcU6sLzAJttJv7LKdjWn0nxWCSbEAtxJ/YYaZMyoNLovG7lPqZRdhgL1gAUfa+V7tbin8y+2llC1cw==" crossorigin="anonymous" />
   <!-- Font Awesome -->
@@ -27,6 +33,7 @@
   <!-- CSS do projeto -->
   <link rel="stylesheet" href="css/styles.css">
 </head>
+
 <body>
   <header>
     <nav id="main-navbar" class="navbar navbar-expand-lg">
@@ -45,16 +52,31 @@
       </form>
       <div class="collapse navbar-collapse" id="navbar">
         <ul class="navbar-nav">
+          <?php if ($userData) : ?>
+            <li class="nav-item">
+              <a href="newmovie.php" class="nav-link"><i class="far fa-plus-square"></i>Incluir filme</a>
+            </li>
+            <li class="nav-item">
+              <a href="dashboard.php" class="nav-link">Meus Filmes</a>
+            </li>
+            <li class="nav-item">
+              <a href="editprofile.php" class="nav-link bold"><?= $userData->name ?></a>
+            </li>
+            <li class="nav-item">
+              <a href="logout.php" class="nav-link">Sair</a>
+            </li>
+          <?php else : ?>
             <li class="nav-item">
               <a href="auth.php" class="nav-link">Entrar / Cadastrar</a>
             </li>
+          <?php endif; ?>
         </ul>
       </div>
     </nav>
   </header>
 
-  <?php if(!empty($flashMessage["msg"])): ?>
+  <?php if (!empty($flashMessage["msg"])) : ?>
     <div class="msg-container">
-      <p class="msg" <?= $flashMessage["type"] ?> ><?= $flashMessage["msg"] ?></p>
+      <p class="msg" <?= $flashMessage["type"] ?>><?= $flashMessage["msg"] ?></p>
     </div>
-    <?php endif; ?>
+  <?php endif; ?>
