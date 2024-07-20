@@ -54,6 +54,26 @@ if ($userData->image == "") {
         </div>
       </div>
     </form>
+    <div class="row" id="change-password-container">
+      <div class="col-md-4">
+        <h2>Alterar a senha:</h2>
+        <p class="page-description">
+          Digite a nova senha e digite para confirmar a sua senha
+        </p>
+        <form action="user_process.php" method="post">
+        <input type="hidden" name="type" value="changePassword">
+        <div class="form-group">
+            <label for="password">Nova senha:</label>
+            <input type="password" class="form-control" id="password" name="password" placeholder="Digite a sua nova senha">
+          </div>
+          <div class="form-group">
+            <label for="confirmPassword">Confirme a nova senha:</label>
+            <input type="password" class="form-control" id="confirmPassword" name="confirmPassword" placeholder="Confirme a sua nova senha">
+          </div>
+          <input type="submit" class="btn form-btn" value="Alterar senha">
+        </form>
+      </div>
+    </div>
   </div>
 </div>
 
