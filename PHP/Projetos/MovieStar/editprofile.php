@@ -35,7 +35,7 @@ if ($userData->image == "") {
             <label for="email">E-mail:</label>
             <input type="text" readonly class="form-control disabled" id="email" name="email" value="<?= $userData->email ?>">
           </div>
-          <input type="submit" class="btn form-btn" value="Alterar">
+          <input type="submit" class="btn card-btn" value="Alterar">
         </div>
         <div class="col-md-4">
           <div id="profile-image-container" style="background-image: url('img/users/<?= $userData->image ?>">
@@ -70,7 +70,7 @@ if ($userData->image == "") {
             <label for="confirmPassword">Confirme a nova senha:</label>
             <input type="password" class="form-control" id="confirmPassword" name="confirmPassword" placeholder="Confirme a sua nova senha">
           </div>
-          <input type="submit" class="btn form-btn" value="Alterar senha">
+          <input type="submit" class="btn card-btn" value="Alterar senha">
         </form>
       </div>
     </div>
