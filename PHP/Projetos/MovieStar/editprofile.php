@@ -62,6 +62,7 @@ if ($userData->image == "") {
         </p>
         <form action="user_process.php" method="post">
         <input type="hidden" name="type" value="changePassword">
+        <input type="hidden" name="id" value="<?= $userData->id ?>">
         <div class="form-group">
             <label for="password">Nova senha:</label>
             <input type="password" class="form-control" id="password" name="password" placeholder="Digite a sua nova senha">
