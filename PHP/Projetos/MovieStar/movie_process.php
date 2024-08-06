@@ -8,9 +8,11 @@ require_once("dao/MovieDAO.php");
 
 $message = new Message();
 $userDAO = new UserDAO($conn);
-$userData = $userDAO->verifyToken();
+$movieDAO = new MovieDAO($conn);
 
 $type = filter_input(INPUT_POST, "type");
+
+$userData = $userDAO->verifyToken();
 
 if ($type === "create") {
     $title = filter_input(INPUT_POST, "title");
@@ -58,6 +60,7 @@ if ($type === "create") {
     
             }
         }
+        $movieDAO->create($movie);
     } else {
         $message->setMessage("Você precisa adicionar o titulo, a descrição e a categoria do filme!", "error", "back");
     }
