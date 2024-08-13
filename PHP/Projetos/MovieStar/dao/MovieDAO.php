@@ -76,8 +76,53 @@
 
     }
 
-    public function getMoviesByUserId($id) {}
-    public function findById($id) {}
+    public function getMoviesByUserId($id) {
+      $movies = [];
+
+      $stmt = $this->conn->prepare("SELECT * FROM movies
+                                    WHERE users_id = :users_id
+                                    ");
+
+      $stmt->bindParam(":users_id", $id);
+
+      $stmt->execute();
+
+      if($stmt->rowCount() > 0) {
+
+        $moviesArray = $stmt->fetchAll();
+
+        foreach($moviesArray as $movie) {
+          $movies[] = $this->buildMovie($movie);
+        }
+
+      }
+
+      return $movies;
+    }
+    public function findById($id) {
+      $movie = [];
+
+      $stmt = $this->conn->prepare("SELECT * FROM movies
+                                    WHERE id = :id
+                                    ");
+
+      $stmt->bindParam(":id", $id);
+
+      $stmt->execute();
+
+      if($stmt->rowCount() > 0) {
+
+        $movieData = $stmt->fetch();
+
+        $movie = $this->buildMovie($movieData);
+
+        return $movie;
+
+      } else{
+        return false;
+      }
+
+    }
     public function findByTitle($title) {}
     public function create(Movie $movie) {
       $stmt = $this->conn->prepare("INSERT INTO movies (title, description, image, trailer, category, length, users_id) VALUES (:title, :description, :image, :trailer, :category, :length, :users_id)");
