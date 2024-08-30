@@ -2,6 +2,7 @@
 
   require_once("models/Review.php");
   require_once("models/Message.php");
+  require_once("dao/UserDAO.php");
 
   class ReviewDAO implements ReviewDAOInterface {
     private $conn;
@@ -42,10 +43,52 @@
           $this->message->setMessage("Crítica adicionada com sucesso!", "success", "index.php");
     }
     public function getMoviesReview($id) {
+      $reviews = [];
 
+      $stmt = $this->conn->prepare("SELECT * FROM reviews WHERE movies_id = :movies_id");
+
+      $stmt->bindParam(":movies_id", $id);
+
+      $stmt->execute();
+
+      if($stmt->rowCount() > 0) {
+
+        $reviewsData = $stmt->fetchAll();
+
+        $userDao = new UserDao($this->conn);
+
+        foreach($reviewsData as $review) {
+
+          $reviewObject = $this->buildReview($review);
+
+          // Chamar dados do usuário
+          $user = $userDao->findById($reviewObject->users_id);
+
+
+
+          $reviews[] = [
+            "review" => $reviewObject,
+            "user" => $user
+        ];
+        }
+
+      }
+
+      return $reviews;
     }
     public function hasAlreadyReviewed($id, $userId) {
+      $stmt = $this->conn->prepare("SELECT * FROM reviews WHERE movies_id = :movies_id AND users_id = :users_id");
 
+      $stmt->bindParam(":movies_id", $id);
+      $stmt->bindParam(":users_id", $userId);
+
+      $stmt->execute();
+
+      if($stmt->rowCount() > 0) {
+        return true;
+      } else {
+        return false;
+      }
     }
     public function getRatings($id) {
 

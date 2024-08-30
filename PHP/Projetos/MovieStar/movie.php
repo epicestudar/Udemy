@@ -4,12 +4,14 @@
   // Verifica se usuário está autenticado
   require_once("models/Movie.php");
   require_once("dao/MovieDAO.php");
+  require_once("dao/ReviewDAO.php");
 
   $id = filter_input(INPUT_GET, "id");
 
   $movie;
 
   $movieDAO = new MovieDAO($conn);
+  $reviewDAO = new ReviewDAO($conn);
 
   if(empty($id)) {
     $message->setMessage("O filme não foi encontrado!", "error", "index.php");
@@ -31,9 +33,11 @@
     if($userData->id === $movie->users_id) {
         $userOwnsMovie = true;
     }
+
+    $alreadyReviewed = $reviewDAO->hasAlreadyReviewed($id, $userData->id);
   }
 
-  $alreadyReviewed = false;
+  $movieReviews = $reviewDAO->getMoviesReview($id);
 
 ?>
 
@@ -88,7 +92,10 @@
         </form>
       </div>
       <?php endif; ?>
-      
+       <!-- Comentários -->
+       <?php foreach($movieReviews as $review): ?>
+        <?php require("templates/user_review.php"); ?>
+      <?php endforeach; ?>
     </div>
   </div>
 </div>
