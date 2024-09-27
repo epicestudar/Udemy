@@ -7,3 +7,5 @@ Módulo 16: PHP com Banco de Dados MySQL
 Módulo 17: Projeto de Agenda com CRUD
 
 Módulo 18: Design Patterns e Padrões de Desenvolvimento
+
+Módulo 19: Projeto Final e Completo de uma MovieStar(POO)
