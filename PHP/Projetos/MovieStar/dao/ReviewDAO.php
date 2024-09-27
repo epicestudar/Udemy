@@ -123,4 +123,13 @@ class ReviewDAO implements ReviewDAOInterface
     return $rating;
 
   }
+
+  public function getAverageRatingByMovieId($movieId) {
+    $stmt = $this->conn->prepare("SELECT AVG(rating) AS average_rating FROM reviews WHERE movies_id = :movies_id");
+    $stmt->bindParam(":movies_id", $movieId);
+    $stmt->execute();
+
+    $result = $stmt->fetch(PDO::FETCH_ASSOC);
+    return $result['average_rating'] ? round($result['average_rating'], 1) : null; // Arredonda a média e retorna null se não houver avaliações
+}
 }

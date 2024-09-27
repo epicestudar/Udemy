@@ -16,4 +16,5 @@
     public function getMoviesReview($id);
     public function hasAlreadyReviewed($id, $userId);
     public function getRatings($id);
+
   }

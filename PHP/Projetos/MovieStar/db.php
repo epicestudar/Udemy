@@ -5,7 +5,7 @@ session_start();
 $db_name = "world";
 $db_host = "localhost";
 $db_user = "root";
-$db_pass = "dulcidia10";
+$db_pass = "root";
 
 $conn = new PDO("mysql:dbname=". $db_name. ";host=". $db_host, $db_user, $db_pass);
 
