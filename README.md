@@ -1,3 +1,3 @@
-Repositório de cursos que vou estar fazendo
+Repositório de cursos que finalizei ou estou fazendo
 
-Curso atual: PHP - para saber mais [clique aqui](https://github.com/epicestudar/Udemy/blob/main/PHP/Modulos/README.md).
+Curso Finalizado: PHP - para saber mais [clique aqui](https://github.com/epicestudar/Udemy/blob/main/PHP/Modulos/README.md).
