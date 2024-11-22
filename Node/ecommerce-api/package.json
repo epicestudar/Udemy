@@ -12,5 +12,11 @@
   "description": "",
   "dependencies": {
     "express": "^4.21.1"
+  },
+  "devDependencies": {
+    "@tsconfig/recommended": "^1.0.8",
+    "@types/express": "^5.0.0",
+    "@types/node": "^22.9.1",
+    "typescript": "^5.6.3"
   }
 }
