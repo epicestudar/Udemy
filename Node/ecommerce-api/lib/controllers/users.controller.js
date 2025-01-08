@@ -1,18 +1,24 @@
-let id = 0;
+import { getFirestore } from "firebase-admin/firestore";
 let usuarios = [];
 export class UsersController {
-    static getAll(_req, res) {
-        res.send(usuarios);
+    static async getAll(_req, res) {
+        const snapshot = await getFirestore().collection("users").get();
+        const users = snapshot.docs.map(doc => {
+            return {
+                doc: doc.id,
+                ...doc.data()
+            };
+        });
+        res.send(users);
     }
     static getById(_req, res) {
         let userId = Number(_req.params.id);
         let user = usuarios.find((user) => user.id === userId);
         res.send(user);
     }
-    static save(_req, res) {
+    static async save(_req, res) {
         let user = _req.body;
-        user.id = ++id;
-        usuarios.push(user);
+        await getFirestore().collection("users").add(user);
         res.send({ message: "Usuário criado com sucesso!" });
     }
     static update(_req, res) {
