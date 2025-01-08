@@ -4,7 +4,7 @@
   "main": "index.js",
   "type": "module",
   "scripts": {
-    "start": "npx tsc-watch --onSuccess \"node ./lib/index.js\"",
+    "start": "npx tsc-watch --onSuccess \"node --env-file=.env ./lib/index.js\"",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "keywords": [],
@@ -12,7 +12,8 @@
   "license": "ISC",
   "description": "",
   "dependencies": {
-    "express": "^4.21.1"
+    "express": "^4.21.1",
+    "firebase-admin": "^13.0.2"
   },
   "devDependencies": {
     "@tsconfig/recommended": "^1.0.8",
