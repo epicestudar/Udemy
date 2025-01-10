@@ -1,41 +1,79 @@
 import { getFirestore } from "firebase-admin/firestore";
-let usuarios = [];
 export class UsersController {
     static async getAll(_req, res) {
-        const snapshot = await getFirestore().collection("users").get();
-        const users = snapshot.docs.map(doc => {
-            return {
-                doc: doc.id,
-                ...doc.data()
-            };
-        });
-        res.send(users);
+        try {
+            const snapshot = await getFirestore().collection("users").get();
+            const users = snapshot.docs.map((doc) => {
+                return {
+                    doc: doc.id,
+                    ...doc.data(),
+                };
+            });
+            res.send(users);
+        }
+        catch (error) {
+            res.status(500).send({
+                message: "Erro ao buscar usuários"
+            });
+        }
     }
-    static getById(_req, res) {
-        let userId = Number(_req.params.id);
-        let user = usuarios.find((user) => user.id === userId);
-        res.send(user);
+    static async getById(_req, res) {
+        try {
+            let userId = _req.params.id;
+            const doc = await getFirestore().collection("users").doc(userId).get();
+            let user = {
+                doc: doc.id,
+                ...doc.data(),
+            };
+            res.send(user);
+        }
+        catch (error) {
+            res.status(500).send({
+                message: "Erro ao buscar usuário"
+            });
+        }
     }
     static async save(_req, res) {
-        let user = _req.body;
-        await getFirestore().collection("users").add(user);
-        res.send({ message: "Usuário criado com sucesso!" });
+        try {
+            let user = _req.body;
+            await getFirestore().collection("users").add(user);
+            res.status(201).send({ message: "Usuário criado com sucesso!" });
+        }
+        catch (error) {
+            res.status(500).send({
+                message: "Erro ao criar usuário"
+            });
+        }
     }
     static update(_req, res) {
-        let userId = Number(_req.params.id);
-        let userIndex = usuarios.findIndex((user) => user.id === userId);
-        const updatedUser = _req.body;
-        usuarios[userIndex] = { ...usuarios[userIndex], ...updatedUser };
-        res.send({
-            message: "Usuário atualizado com sucesso!",
-            user: usuarios[userIndex],
-        });
+        try {
+            let userId = _req.params.id;
+            let user = _req.body;
+            getFirestore().collection("users").doc(userId).set({
+                nome: user.nome,
+                email: user.email,
+            });
+            res.send({
+                message: "Usuário atualizado com sucesso!",
+            });
+        }
+        catch (error) {
+            res.status(500).send({
+                message: "Erro ao atualizar usuário"
+            });
+        }
     }
-    static delete(_req, res) {
-        let userId = Number(_req.params.id);
-        let userIndex = usuarios.findIndex((user) => user.id === userId);
-        usuarios.splice(userIndex, 1);
-        res.send({ message: "Usuário removido com sucesso!" });
+    static async delete(_req, res) {
+        try {
+            let userId = _req.params.id;
+            await getFirestore().collection("users").doc(userId).delete();
+            res.status(204).end();
+        }
+        catch (error) {
+            res.status(500).send({
+                message: "Erro ao deletar usuário"
+            });
+        }
     }
 }
 //# sourceMappingURL=users.controller.js.map
