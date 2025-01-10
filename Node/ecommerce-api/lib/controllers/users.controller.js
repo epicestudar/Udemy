@@ -1,6 +1,7 @@
 import { getFirestore } from "firebase-admin/firestore";
+import { ValidationError } from "../errors/validation-error.js";
 export class UsersController {
-    static async getAll(_req, res) {
+    static async getAll(_req, res, next) {
         try {
             const snapshot = await getFirestore().collection("users").get();
             const users = snapshot.docs.map((doc) => {
@@ -12,12 +13,10 @@ export class UsersController {
             res.send(users);
         }
         catch (error) {
-            res.status(500).send({
-                message: "Erro ao buscar usuários"
-            });
+            next(error);
         }
     }
-    static async getById(_req, res) {
+    static async getById(_req, res, next) {
         try {
             let userId = _req.params.id;
             const doc = await getFirestore().collection("users").doc(userId).get();
@@ -28,24 +27,23 @@ export class UsersController {
             res.send(user);
         }
         catch (error) {
-            res.status(500).send({
-                message: "Erro ao buscar usuário"
-            });
+            next(error);
         }
     }
-    static async save(_req, res) {
+    static async save(_req, res, next) {
         try {
             let user = _req.body;
+            if (!user.email || user.email?.length === 0) {
+                throw new ValidationError("Email obrigatório");
+            }
             await getFirestore().collection("users").add(user);
             res.status(201).send({ message: "Usuário criado com sucesso!" });
         }
         catch (error) {
-            res.status(500).send({
-                message: "Erro ao criar usuário"
-            });
+            next(error);
         }
     }
-    static update(_req, res) {
+    static update(_req, res, next) {
         try {
             let userId = _req.params.id;
             let user = _req.body;
@@ -58,21 +56,17 @@ export class UsersController {
             });
         }
         catch (error) {
-            res.status(500).send({
-                message: "Erro ao atualizar usuário"
-            });
+            next(error);
         }
     }
-    static async delete(_req, res) {
+    static async delete(_req, res, next) {
         try {
             let userId = _req.params.id;
             await getFirestore().collection("users").doc(userId).delete();
             res.status(204).end();
         }
         catch (error) {
-            res.status(500).send({
-                message: "Erro ao deletar usuário"
-            });
+            next(error);
         }
     }
 }
