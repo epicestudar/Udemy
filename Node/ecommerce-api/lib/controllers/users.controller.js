@@ -1,5 +1,4 @@
 import { getFirestore } from "firebase-admin/firestore";
-import { ValidationError } from "../errors/validation-error.js";
 import { NotFoundError } from "../errors/not-found.error.js";
 export class UsersController {
     static async getAll(_req, res, next) {
@@ -28,9 +27,6 @@ export class UsersController {
     }
     static async save(_req, res, next) {
         let user = _req.body;
-        if (!user.email || user.email?.length === 0) {
-            throw new ValidationError("Email obrigatório");
-        }
         await getFirestore().collection("users").add(user);
         res.status(201).send({ message: "Usuário criado com sucesso!" });
     }

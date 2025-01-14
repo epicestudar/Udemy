@@ -12,6 +12,7 @@
   "license": "ISC",
   "description": "",
   "dependencies": {
+    "celebrate": "^15.0.3",
     "express": "^4.21.1",
     "express-async-handler": "^1.2.0",
     "firebase-admin": "^13.0.2"
