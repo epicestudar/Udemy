@@ -33,7 +33,8 @@ export class UserRepository {
   }
 
   async save(user: User) {
-    await getFirestore().collection("users").add(user);
+    delete user.password;
+    await this.collection.add(user);
   }
 
   async update(user: User) {

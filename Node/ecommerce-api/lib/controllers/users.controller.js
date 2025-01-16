@@ -1,5 +1,3 @@
-import { getFirestore } from "firebase-admin/firestore";
-import { NotFoundError } from "../errors/not-found.error.js";
 import { UserService } from "../services/user.service.js";
 export class UsersController {
     static async getAll(_req, res, next) {
@@ -10,30 +8,22 @@ export class UsersController {
         res.send(await new UserService().getById(userId));
     }
     static async save(_req, res, next) {
-        let user = _req.body;
-        await getFirestore().collection("users").add(user);
-        res.status(201).send({ message: "Usuário criado com sucesso!" });
+        await new UserService().save(_req.body);
+        res.status(201).send({
+            message: "Usuário criado com sucesso"
+        });
     }
     static async update(_req, res, next) {
         let userId = _req.params.id;
         let user = _req.body;
-        let docRef = getFirestore().collection("users").doc(userId);
-        if ((await docRef.get()).exists) {
-            await docRef.set({
-                nome: user.nome,
-                email: user.email,
-            });
-            res.send({
-                message: "Usuário atualizado com sucesso!",
-            });
-        }
-        else {
-            throw new NotFoundError("Usuário não encontrado");
-        }
+        await new UserService().update(userId, user);
+        res.send({
+            message: "Usuário atualizado com sucesso!",
+        });
     }
     static async delete(_req, res, next) {
         let userId = _req.params.id;
-        await getFirestore().collection("users").doc(userId).delete();
+        await new UserService().delete(userId);
         res.status(204).end();
     }
 }
