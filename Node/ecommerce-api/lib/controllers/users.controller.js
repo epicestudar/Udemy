@@ -1,29 +1,13 @@
 import { getFirestore } from "firebase-admin/firestore";
 import { NotFoundError } from "../errors/not-found.error.js";
+import { UserService } from "../services/user.service.js";
 export class UsersController {
     static async getAll(_req, res, next) {
-        const snapshot = await getFirestore().collection("users").get();
-        const users = snapshot.docs.map((doc) => {
-            return {
-                doc: doc.id,
-                ...doc.data(),
-            };
-        });
-        res.send(users);
+        res.send(await new UserService().getAll());
     }
     static async getById(_req, res, next) {
         let userId = _req.params.id;
-        const doc = await getFirestore().collection("users").doc(userId).get();
-        if (doc.exists) {
-            let user = {
-                doc: doc.id,
-                ...doc.data(),
-            };
-            res.send(user);
-        }
-        else {
-            throw new NotFoundError("Usuário não encontrado");
-        }
+        res.send(await new UserService().getById(userId));
     }
     static async save(_req, res, next) {
         let user = _req.body;
