@@ -1,14 +1,11 @@
-import { ValidationError } from "../errors/validation-error.js";
 import { InternalServerError } from "../errors/internal-server.error.js";
-import { NotFoundError } from "../errors/not-found.error.js";
 import { errors } from "celebrate";
+import { ErrorBase } from "../errors/base.error.js";
 export const errorHandler = (app) => {
     app.use(errors());
     app.use((error, req, res, next) => {
-        if (error instanceof ValidationError) {
-            error.send(res);
-        }
-        else if (error instanceof NotFoundError) {
+        console.log(error);
+        if (error instanceof ErrorBase) {
             error.send(res);
         }
         else {
