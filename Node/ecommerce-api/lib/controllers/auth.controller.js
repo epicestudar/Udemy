@@ -8,5 +8,10 @@ export class AuthController {
             token: token
         });
     }
+    static async recovery(req, res) {
+        const { email } = req.body;
+        await new AuthService().recovery(email);
+        res.end();
+    }
 }
 //# sourceMappingURL=auth.controller.js.map

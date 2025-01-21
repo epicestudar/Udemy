@@ -4,7 +4,8 @@ import { UserService } from "../services/user.service.js";
 import { ForbiddenError } from "../errors/forbidden.error.js";
 export const auth = (app) => {
     app.use(async (req, res, next) => {
-        if (req.method === "POST" && req.url.startsWith("/auth/login")) {
+        if ((req.method === "POST" && req.url.startsWith("/auth/login")) ||
+            req.url.startsWith("/auth/recovery")) {
             return next();
         }
         const token = req.headers.authorization?.split("Bearer ")[1];

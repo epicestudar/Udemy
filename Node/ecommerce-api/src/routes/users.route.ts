@@ -2,7 +2,7 @@ import {Router} from "express";
 import { UsersController } from "../controllers/users.controller.js";
 import asyncHandler from "express-async-handler";
 import { celebrate, Segments } from "celebrate";
-import { userSchema } from "../models/user.model.js";
+import { newUserSchema, updateUserSchema } from "../models/user.model.js";
 
 export const userRoutes = Router();
 
@@ -14,7 +14,7 @@ userRoutes.get("/users/:id", asyncHandler(UsersController.getById));
 userRoutes.post(
   "/users",
   celebrate({
-    [Segments.BODY]: userSchema,
+    [Segments.BODY]: newUserSchema,
   }),
   asyncHandler(UsersController.save)
 );
@@ -22,7 +22,7 @@ userRoutes.post(
 userRoutes.put(
   "/users/:id",
   celebrate({
-    [Segments.BODY]: userSchema,
+    [Segments.BODY]: updateUserSchema,
   }),
   asyncHandler(UsersController.update)
 );
