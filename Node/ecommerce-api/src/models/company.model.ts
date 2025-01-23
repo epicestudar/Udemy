@@ -15,11 +15,10 @@ export type Company = {
 };
 
 export const newCompanySchema = Joi.object().keys({
-  logomarca: Joi.string().allow(null),
-  cpfCnpj: Joi.alternatives().try(
-    Joi.string().length(11).required(),
-    Joi.string().length(14).required()
-  ),
+  logomarca: Joi.string().base64().required(),
+  cpfCnpj: Joi.alternatives()
+    .try(Joi.string().length(11).required(), Joi.string().length(14).required())
+    .required(),
   razaoSocial: Joi.string().required(),
   nomeFantasia: Joi.string().required(),
   telefone: Joi.string()
@@ -33,7 +32,10 @@ export const newCompanySchema = Joi.object().keys({
 });
 
 export const updateCompanySchema = Joi.object().keys({
-  logomarca: Joi.string().allow(null),
+  logomarca: Joi.alternatives().try(
+    Joi.string().base64().required(),
+    Joi.string().uri().required()
+  ).required(),
   cpfCnpj: Joi.alternatives().try(
     Joi.string().length(11).required(),
     Joi.string().length(14).required()

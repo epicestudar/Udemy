@@ -1,9 +1,14 @@
+import { URL } from "node:url";
 import { NotFoundError } from "../errors/not-found.error.js";
 import { CompanyRepository } from "../repositories/company.repository.js";
+import { UploadFileService } from "./upload-file.service.js";
+import { ValidationError } from "../errors/validation-error.js";
 export class CompanyService {
     companyRepository;
+    uploadFileService;
     constructor() {
         this.companyRepository = new CompanyRepository();
+        this.uploadFileService = new UploadFileService("images/companies/");
     }
     async getAll() {
         return this.companyRepository.getAll();
@@ -16,6 +21,8 @@ export class CompanyService {
         return company;
     }
     async save(company) {
+        const logomarcaUrl = await this.uploadFileService.upload(company.logomarca);
+        company.logomarca = logomarcaUrl;
         await this.companyRepository.save(company);
     }
     async update(id, company) {
@@ -23,7 +30,9 @@ export class CompanyService {
         if (!_company) {
             throw new NotFoundError("Empresa não encontrada");
         }
-        _company.logomarca = company.logomarca;
+        if (!this.isValidUrl(company.logomarca)) {
+            _company.logomarca = await this.uploadFileService.upload(company.logomarca);
+        }
         _company.cpfCnpj = company.cpfCnpj;
         _company.razaoSocial = company.razaoSocial;
         _company.nomeFantasia = company.nomeFantasia;
@@ -34,6 +43,21 @@ export class CompanyService {
         _company.taxaEntrega = company.taxaEntrega;
         _company.ativa = company.ativa;
         await this.companyRepository.update(_company);
+    }
+    isValidUrl(urlStr) {
+        try {
+            const url = new URL(urlStr);
+            if (url.host !== "firebasetorage.googlelapis.com") {
+                throw new ValidationError("URL de origem inválida");
+            }
+            return true;
+        }
+        catch (error) {
+            if (error instanceof ValidationError) {
+                throw error;
+            }
+            return false;
+        }
     }
 }
 //# sourceMappingURL=company.service.js.map
