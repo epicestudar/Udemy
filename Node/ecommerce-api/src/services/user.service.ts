@@ -35,11 +35,7 @@ export class UserService{
     }
 
     async update(id: string, user: User) {
-       const _user = await this.userRepository.getById(id);
-
-       if(!_user) {
-        throw new NotFoundError("Usuário não encontrado");
-       }
+       const _user = await this.getById(id);
 
        _user.nome = user.nome;
        _user.email = user.email;

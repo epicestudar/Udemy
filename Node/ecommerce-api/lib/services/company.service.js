@@ -26,10 +26,7 @@ export class CompanyService {
         await this.companyRepository.save(company);
     }
     async update(id, company) {
-        const _company = await this.companyRepository.getById(id);
-        if (!_company) {
-            throw new NotFoundError("Empresa não encontrada");
-        }
+        const _company = await this.getById(id);
         if (!this.isValidUrl(company.logomarca)) {
             _company.logomarca = await this.uploadFileService.upload(company.logomarca);
         }
