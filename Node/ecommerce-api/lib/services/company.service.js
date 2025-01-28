@@ -1,8 +1,7 @@
-import { URL } from "node:url";
 import { NotFoundError } from "../errors/not-found.error.js";
 import { CompanyRepository } from "../repositories/company.repository.js";
 import { UploadFileService } from "./upload-file.service.js";
-import { ValidationError } from "../errors/validation-error.js";
+import { isStorageUrlValid } from "../utils/validation-utils.js";
 export class CompanyService {
     companyRepository;
     uploadFileService;
@@ -27,7 +26,7 @@ export class CompanyService {
     }
     async update(id, company) {
         const _company = await this.getById(id);
-        if (!this.isValidUrl(company.logomarca)) {
+        if (!isStorageUrlValid(company.logomarca)) {
             _company.logomarca = await this.uploadFileService.upload(company.logomarca);
         }
         _company.cpfCnpj = company.cpfCnpj;
@@ -40,21 +39,6 @@ export class CompanyService {
         _company.taxaEntrega = company.taxaEntrega;
         _company.ativa = company.ativa;
         await this.companyRepository.update(_company);
-    }
-    isValidUrl(urlStr) {
-        try {
-            const url = new URL(urlStr);
-            if (url.host !== "firebasetorage.googlelapis.com") {
-                throw new ValidationError("URL de origem inválida");
-            }
-            return true;
-        }
-        catch (error) {
-            if (error instanceof ValidationError) {
-                throw error;
-            }
-            return false;
-        }
     }
 }
 //# sourceMappingURL=company.service.js.map

@@ -1,4 +1,4 @@
-import { getFirestore } from "firebase-admin/firestore";
+import { getFirestore, } from "firebase-admin/firestore";
 export class ProductRepository {
     collection;
     constructor() {
@@ -6,6 +6,15 @@ export class ProductRepository {
     }
     async getAll() {
         const snapshot = await this.collection.get();
+        return this.snapshotToArray(snapshot);
+    }
+    async search(categoriaId) {
+        const snapshot = await this.collection
+            .where("categoria.id", "==", categoriaId)
+            .get();
+        return this.snapshotToArray(snapshot);
+    }
+    snapshotToArray(snapshot) {
         return snapshot.docs.map((doc) => {
             return {
                 doc: doc.id,
@@ -37,12 +46,9 @@ export class ProductRepository {
             preco: product.preco,
             imagem: product.imagem,
             categoria: product.categoria,
-            ativa: product.ativa
+            ativa: product.ativa,
         });
     }
-    // async update(id: string, product: Omit<Product, "id">) {
-    //   await this.collection.doc(id).set(product, { merge: true });
-    // }
     async delete(id) {
         await this.collection.doc(id).delete();
     }

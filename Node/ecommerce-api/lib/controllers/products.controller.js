@@ -3,6 +3,10 @@ export class ProductsController {
     static async getAll(_req, res) {
         res.send(await new ProductService().getAll());
     }
+    static async search(_req, res) {
+        const categoriaId = _req.query.categoriaId;
+        res.send(await new ProductService().search(categoriaId));
+    }
     static async getById(_req, res) {
         let productId = _req.params.id;
         res.send(await new ProductService().getById(productId));
