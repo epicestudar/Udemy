@@ -52,5 +52,9 @@ export class ProductRepository {
     async delete(id) {
         await this.collection.doc(id).delete();
     }
+    async getCountByCategoria(categoriaId) {
+        const countSnapshot = await this.collection.where("categoria.id", "==", categoriaId).count().get();
+        return countSnapshot.data().count;
+    }
 }
 //# sourceMappingURL=product.repository.js.map

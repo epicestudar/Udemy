@@ -69,4 +69,9 @@ export class ProductRepository {
   async delete(id: string) {
     await this.collection.doc(id).delete();
   }
+
+  async getCountByCategoria(categoriaId: string): Promise<number> {
+    const countSnapshot = await this.collection.where("categoria.id", "==", categoriaId).count().get();
+    return countSnapshot.data().count;
+  }
 }

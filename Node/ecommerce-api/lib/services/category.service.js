@@ -1,9 +1,13 @@
 import { NotFoundError } from "../errors/not-found.error.js";
+import { ValidationError } from "../errors/validation-error.js";
 import { CategoryRepository } from "../repositories/category.repository.js";
+import { ProductRepository } from "../repositories/product.repository.js";
 export class CategoryService {
     categoryRepository;
+    productRepository;
     constructor() {
         this.categoryRepository = new CategoryRepository();
+        this.productRepository = new ProductRepository();
     }
     async getAll() {
         return this.categoryRepository.getAll();
@@ -25,6 +29,9 @@ export class CategoryService {
         await this.categoryRepository.update(_category);
     }
     async delete(id) {
+        if (await this.productRepository.getCountByCategoria(id) > 0) {
+            throw new ValidationError("Não é possível excluir uma categoria com produtos relacionados!");
+        }
         await this.categoryRepository.delete(id);
     }
 }
