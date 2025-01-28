@@ -36,18 +36,22 @@ export class ProductRepository {
     return { id: docRef.id, ...product };
   }
 
-  // async update(product: Product) {
-  //   let docRef = this.collection.doc(product.id!);
+  async update(product: Product) {
+    let docRef = this.collection.doc(product.id!);
 
-  //   await docRef.set({
-  //     descricao: product.descricao,
-  //     ativa: product.ativa,
-  //   });
-  // }
-
-  async update(id: string, product: Omit<Product, "id">) {
-    await this.collection.doc(id).set(product, { merge: true });
+    await docRef.set({
+      nome: product.nome,
+      descricao: product.descricao,
+      preco: product.preco,
+      imagem: product.imagem,
+      categoria: product.categoria,
+      ativa: product.ativa
+    });
   }
+
+  // async update(id: string, product: Omit<Product, "id">) {
+  //   await this.collection.doc(id).set(product, { merge: true });
+  // }
 
   async delete(id: string) {
     await this.collection.doc(id).delete();
