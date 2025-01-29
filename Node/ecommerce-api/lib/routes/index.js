@@ -4,6 +4,7 @@ import { authRoutes } from "./auth.route.js";
 import { companiesRoutes } from "./companies.route.js";
 import { categoryRoutes } from "./categories.route.js";
 import { productRoutes } from "./products.route.js";
+import { paymentMethodsRoutes } from "./payment-methods.route.js";
 export const routes = (app) => {
     app.use(express.json({ limit: "5mb" }));
     app.use(authRoutes);
@@ -11,5 +12,6 @@ export const routes = (app) => {
     app.use(companiesRoutes);
     app.use(categoryRoutes);
     app.use(productRoutes);
+    app.use(paymentMethodsRoutes);
 };
 //# sourceMappingURL=index.js.map
