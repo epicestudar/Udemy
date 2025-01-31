@@ -1,25 +1,20 @@
-import { CollectionReference, getFirestore } from "firebase-admin/firestore";
-import { Order, QueryParamsOrder } from "../models/order-model.js";
-
+import { getFirestore } from "firebase-admin/firestore";
 export class OrderRepository {
-    private collection: CollectionReference;
-
+    collection;
     constructor() {
         this.collection = getFirestore().collection('orders');
     }
-
-    async save(order: Order) {
+    async save(order) {
         await this.collection.add(order);
     }
-
-    async search(query: QueryParamsOrder): Promise<Order[]> {
+    async search(query) {
         const snapshot = await this.collection.get();
-
         return snapshot.docs.map(doc => {
             return {
                 id: doc.id,
                 ...doc.data()
-            } as unknown;
-        }) as Order[];
+            };
+        });
     }
 }
+//# sourceMappingURL=order.repository.js.map
