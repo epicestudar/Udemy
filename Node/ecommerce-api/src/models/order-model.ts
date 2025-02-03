@@ -1,3 +1,4 @@
+import { Timestamp } from "firebase-admin/firestore";
 import { Address, orderAddressSchema } from "./address.model.js";
 import { Company } from "./company.model.js";
 import { Customer, customerSchema } from "./customer.model.js";
@@ -5,7 +6,8 @@ import { OrderItem, orderItemSchema } from "./order-item.model.js";
 import { PaymentMethod } from "./payment-method.model.js";
 import { Joi } from "celebrate";
 
-export type Order = {
+export class Order {
+    id: string;
     empresa: Company;
     cliente: Customer;
     endereco: Address;
@@ -16,7 +18,22 @@ export type Order = {
     taxaEntrega: number;
     items: OrderItem[];
     status: OrderStatus;
+
+    constructor(date: any) {
+        this.id = date.id;
+        this.empresa = date.empresa;
+        this.cliente = date.cliente;
+        this.endereco = date.endereco;
+        this.cpfCnpjCupom = date.cpfCnpjCupom;
+        this.date = date.date instanceof Timestamp ? date.date.toDate() : date.date;
+        this.isEntrega = date.isEntrega;
+        this.formaPagamento = date.formaPagamento;
+        this.taxaEntrega = date.taxaEntrega;
+        this.items = date.items;
+        this.status = date.status;
+    }
 };
+
 
 export enum OrderStatus {
     pendente = 'pendente',

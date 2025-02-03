@@ -1,7 +1,35 @@
+import { Timestamp } from "firebase-admin/firestore";
 import { orderAddressSchema } from "./address.model.js";
 import { customerSchema } from "./customer.model.js";
 import { orderItemSchema } from "./order-item.model.js";
 import { Joi } from "celebrate";
+export class Order {
+    id;
+    empresa;
+    cliente;
+    endereco;
+    cpfCnpjCupom;
+    date;
+    isEntrega;
+    formaPagamento;
+    taxaEntrega;
+    items;
+    status;
+    constructor(date) {
+        this.id = date.id;
+        this.empresa = date.empresa;
+        this.cliente = date.cliente;
+        this.endereco = date.endereco;
+        this.cpfCnpjCupom = date.cpfCnpjCupom;
+        this.date = date.date instanceof Timestamp ? date.date.toDate() : date.date;
+        this.isEntrega = date.isEntrega;
+        this.formaPagamento = date.formaPagamento;
+        this.taxaEntrega = date.taxaEntrega;
+        this.items = date.items;
+        this.status = date.status;
+    }
+}
+;
 export var OrderStatus;
 (function (OrderStatus) {
     OrderStatus["pendente"] = "pendente";

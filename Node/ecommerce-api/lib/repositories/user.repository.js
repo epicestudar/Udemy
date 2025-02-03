@@ -1,40 +1,23 @@
 import { getFirestore } from "firebase-admin/firestore";
+import { userConverter } from "../models/user.model.js";
 export class UserRepository {
     collection;
     constructor() {
-        this.collection = getFirestore().collection("users");
+        this.collection = getFirestore().collection("users").withConverter(userConverter);
     }
     async getAll() {
         const snapshot = await this.collection.get();
-        return snapshot.docs.map((doc) => {
-            return {
-                doc: doc.id,
-                ...doc.data(),
-            };
-        });
+        return snapshot.docs.map((doc) => doc.data());
     }
     async getById(id) {
         const doc = await this.collection.doc(id).get();
-        if (doc.exists) {
-            return {
-                id: doc.id,
-                ...doc.data(),
-            };
-        }
-        else {
-            return null;
-        }
+        return doc.data() ?? null;
     }
     async save(user) {
-        delete user.password;
         await this.collection.add(user);
     }
     async update(user) {
-        let docRef = this.collection.doc(user.id);
-        await docRef.set({
-            nome: user.nome,
-            email: user.email
-        });
+        await this.collection.doc(user.id).set(user);
     }
     async delete(id) {
         await this.collection.doc(id).delete();

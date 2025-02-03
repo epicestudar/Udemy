@@ -1,39 +1,23 @@
 import { getFirestore } from "firebase-admin/firestore";
+import { paymentMethodConverter } from "../models/payment-method.model.js";
 export class PaymentMethodRepository {
     collection;
     constructor() {
-        this.collection = getFirestore().collection("payment-methods");
+        this.collection = getFirestore().collection("payment-methods").withConverter(paymentMethodConverter);
     }
     async getAll() {
         const snapshot = await this.collection.get();
-        return snapshot.docs.map((doc) => {
-            return {
-                doc: doc.id,
-                ...doc.data(),
-            };
-        });
+        return snapshot.docs.map((doc) => doc.data());
     }
     async getById(id) {
         const doc = await this.collection.doc(id).get();
-        if (doc.exists) {
-            return {
-                id: doc.id,
-                ...doc.data(),
-            };
-        }
-        else {
-            return null;
-        }
+        return doc.data() ?? null;
     }
     async save(paymentMethod) {
         await this.collection.add(paymentMethod);
     }
     async update(paymentMethod) {
-        let docRef = this.collection.doc(paymentMethod.id);
-        await docRef.set({
-            descricao: paymentMethod.descricao,
-            ativa: paymentMethod.ativa
-        });
+        await this.collection.doc(paymentMethod.id).set(paymentMethod);
     }
     async delete(id) {
         await this.collection.doc(id).delete();

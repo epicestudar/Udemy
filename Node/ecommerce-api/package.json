@@ -16,6 +16,7 @@
   "description": "",
   "dependencies": {
     "celebrate": "^15.0.3",
+    "dayjs": "^1.11.13",
     "express": "^4.21.1",
     "express-async-handler": "^1.2.0",
     "file-type": "^20.0.0",

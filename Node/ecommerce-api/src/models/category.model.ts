@@ -1,9 +1,16 @@
 import { Joi } from "celebrate";
+import { DocumentData, FirestoreDataConverter, QueryDocumentSnapshot } from "firebase-admin/firestore";
 
-export type Category = {
-  id?: string;
+export class Category {
+  id: string;
   descricao: string;
   ativa: boolean;
+
+  constructor(data: Category | any) {
+    this.id = data.id;
+    this.descricao = data.descricao;
+    this.ativa = data.ativa ?? true;
+  }
 };
 
 export const newCategorySchema = Joi.object().keys({
@@ -15,3 +22,18 @@ export const newCategorySchema = Joi.object().keys({
     descricao: Joi.string().required(),
     ativa: Joi.boolean().required(),
   });
+
+  export const categoryConverter: FirestoreDataConverter<Category> = {
+    toFirestore: (category: Category): DocumentData => {
+      return {
+      descricao: category.descricao,
+      ativa : category.ativa,
+      }
+    },
+    fromFirestore: (snapshot: QueryDocumentSnapshot): Category => {
+      return new Category({
+        id: snapshot.id,
+        ...snapshot.data()
+      });
+    }
+  }

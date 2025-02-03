@@ -26,7 +26,7 @@ export class CategoryService {
     return category;
   }
 
-  async save(category: Omit<Category, "id">) {
+  async save(category: Category) {
     return this.categoryRepository.save(category);
   }
 
