@@ -48,7 +48,7 @@ export const updateProductSchema = Joi.object().keys({
 export const searchQuerySchema = Joi.object().keys({
     categoriaId: Joi.string().required()
 });
-export const productMethodConverter = {
+export const productConverter = {
     toFirestore: (product) => {
         return {
             nome: product.nome,

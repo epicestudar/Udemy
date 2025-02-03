@@ -33,7 +33,7 @@ export class ProductService {
     return product;
   }
 
-  async save(product: Omit<Product, "id">) {
+  async save(product: Product) {
     if (!product.categoria?.id) {
       throw new NotFoundError("O ID da categoria não foi encontrado.");
     }

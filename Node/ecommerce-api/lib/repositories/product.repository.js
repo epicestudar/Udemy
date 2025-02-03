@@ -1,53 +1,29 @@
 import { getFirestore, } from "firebase-admin/firestore";
+import { productConverter } from "../models/product.model.js";
 export class ProductRepository {
     collection;
     constructor() {
-        this.collection = getFirestore().collection("products");
+        this.collection = getFirestore().collection("products").withConverter(productConverter);
     }
     async getAll() {
         const snapshot = await this.collection.get();
-        return this.snapshotToArray(snapshot);
+        return snapshot.docs.map((doc) => doc.data());
     }
     async search(categoriaId) {
         const snapshot = await this.collection
             .where("categoria.id", "==", categoriaId)
             .get();
-        return this.snapshotToArray(snapshot);
-    }
-    snapshotToArray(snapshot) {
-        return snapshot.docs.map((doc) => {
-            return {
-                doc: doc.id,
-                ...doc.data(),
-            };
-        });
+        return snapshot.docs.map((doc) => doc.data());
     }
     async getById(id) {
         const doc = await this.collection.doc(id).get();
-        if (doc.exists) {
-            return {
-                id: doc.id,
-                ...doc.data(),
-            };
-        }
-        else {
-            return null;
-        }
+        return doc.data() ?? null;
     }
     async save(product) {
-        const docRef = await this.collection.add(product);
-        return { id: docRef.id, ...product };
+        await this.collection.add(product);
     }
     async update(product) {
-        let docRef = this.collection.doc(product.id);
-        await docRef.set({
-            nome: product.nome,
-            descricao: product.descricao,
-            preco: product.preco,
-            imagem: product.imagem,
-            categoria: product.categoria,
-            ativa: product.ativa,
-        });
+        await this.collection.doc(product.id).set(product);
     }
     async delete(id) {
         await this.collection.doc(id).delete();

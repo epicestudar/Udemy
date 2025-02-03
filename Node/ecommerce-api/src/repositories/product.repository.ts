@@ -1,7 +1,6 @@
 import {
   CollectionReference,
   getFirestore,
-  QuerySnapshot,
 } from "firebase-admin/firestore";
 import { Product, productConverter } from "../models/product.model.js";
 
@@ -32,7 +31,7 @@ export class ProductRepository {
    return doc.data() ?? null;
   }
 
-  async save(product: Product): Promise<Product> {
+  async save(product: Product) {
     await this.collection.add(product);
   }
 
