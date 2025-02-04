@@ -6,4 +6,5 @@ import { OrdersController } from "../controllers/orders.controller.js";
 export const orderRoutes = Router();
 orderRoutes.post("/orders", celebrate({ [Segments.BODY]: newOrderSchema }), expressAsyncHandler(OrdersController.save));
 orderRoutes.get("/orders", celebrate({ [Segments.QUERY]: searchOrderQuerySchema }), expressAsyncHandler(OrdersController.search));
+orderRoutes.get("/orders/:id/items", expressAsyncHandler(OrdersController.getItems));
 //# sourceMappingURL=orders.route.js.map

@@ -1,13 +1,26 @@
 import { getFirestore } from "firebase-admin/firestore";
-import { Order } from "../models/order-model.js";
+import { orderConverter } from "../models/order-model.js";
 import dayjs from "dayjs";
+import { orderItemConverter } from "../models/order-item.model.js";
+// import { orderItemConverter } from "../models/order-item.model.js";
 export class OrderRepository {
     collection;
     constructor() {
-        this.collection = getFirestore().collection('orders');
+        this.collection = getFirestore().collection('orders').withConverter(orderConverter);
     }
     async save(order) {
-        await this.collection.add(order);
+        // const orderRef = await this.collection.add(order);
+        // for(let item of order.items) {
+        //     await orderRef.collection("items").withConverter(orderItemConverter).add(item);
+        // }
+        const batch = getFirestore().batch();
+        const orderRef = this.collection.doc();
+        batch.create(orderRef, order);
+        const itemsRef = orderRef.collection("items").withConverter(orderItemConverter);
+        for (let item of order.items) {
+            batch.create(itemsRef.doc(), item);
+        }
+        await batch.commit();
     }
     async search(queryParams) {
         let query = this.collection;
@@ -29,12 +42,12 @@ export class OrderRepository {
             query = query.where("status", "==", queryParams.status);
         }
         const snapshot = await query.get();
-        return snapshot.docs.map(doc => {
-            return new Order({
-                id: doc.id,
-                ...doc.data(),
-            });
-        });
+        return snapshot.docs.map(doc => doc.data());
+    }
+    async getItems(pedidoId) {
+        const pedidoRef = this.collection.doc(pedidoId);
+        const snapshot = await pedidoRef.collection("items").withConverter(orderItemConverter).get();
+        return snapshot.docs.map(doc => doc.data());
     }
 }
 //# sourceMappingURL=order.repository.js.map

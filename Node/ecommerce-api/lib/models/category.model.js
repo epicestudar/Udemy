@@ -3,7 +3,7 @@ export class Category {
     id;
     descricao;
     ativa;
-    constructor(data) {
+    constructor(data = {}) {
         this.id = data.id;
         this.descricao = data.descricao;
         this.ativa = data.ativa ?? true;

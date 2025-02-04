@@ -32,11 +32,13 @@ export class OrderService {
             }
             item.produto = produto;
         }
-        order.date = new Date();
         await this.orderRepository.save(order);
     }
     async search(query) {
         return this.orderRepository.search(query);
+    }
+    async getItems(pedidoId) {
+        return this.orderRepository.getItems(pedidoId);
     }
 }
 //# sourceMappingURL=order.service.js.map

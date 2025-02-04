@@ -13,3 +13,8 @@ orderRoutes.get(
   celebrate({ [Segments.QUERY]: searchOrderQuerySchema }),
   expressAsyncHandler(OrdersController.search)
 );
+
+orderRoutes.get(
+  "/orders/:id/items",
+  expressAsyncHandler(OrdersController.getItems)
+);
