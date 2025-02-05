@@ -40,5 +40,11 @@ export class OrderService {
     async getItems(pedidoId) {
         return this.orderRepository.getItems(pedidoId);
     }
+    async getById(pedidoId) {
+        return this.orderRepository.getById(pedidoId);
+    }
+    async changeStatus(pedidoId, status) {
+        await this.orderRepository.changeStatus(pedidoId, status);
+    }
 }
 //# sourceMappingURL=order.service.js.map

@@ -18,3 +18,8 @@ authRoutes.post(
   }),
   asyncHandler(AuthController.recovery)
 );
+
+authRoutes.post(
+  "/auth/signin",
+  asyncHandler(AuthController.signin)
+);

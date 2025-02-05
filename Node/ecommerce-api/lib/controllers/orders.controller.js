@@ -16,5 +16,14 @@ export class OrdersController {
         const items = await new OrderService().getItems(req.params.id);
         res.send(items);
     }
+    static async getById(req, res) {
+        res.send(await new OrderService().getById(req.params.id));
+    }
+    static async changeStatus(req, res) {
+        const pedidoId = req.params.id;
+        const status = req.body;
+        await new OrderService().changeStatus(pedidoId, status);
+        res.status(204).end();
+    }
 }
 //# sourceMappingURL=orders.controller.js.map

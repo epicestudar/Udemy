@@ -11,4 +11,5 @@ authRoutes.post("/auth/login", celebrate({
 authRoutes.post("/auth/recovery", celebrate({
     [Segments.BODY]: authRecoverySchema,
 }), asyncHandler(AuthController.recovery));
+authRoutes.post("/auth/signin", asyncHandler(AuthController.signin));
 //# sourceMappingURL=auth.route.js.map

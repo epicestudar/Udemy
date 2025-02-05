@@ -21,4 +21,15 @@ export class OrdersController {
         const items = await new OrderService().getItems(req.params.id);
         res.send(items);
     }
+
+    static async getById(req: Request, res: Response) {
+        res.send(await new OrderService().getById(req.params.id));
+    }
+
+    static async changeStatus(req: Request, res: Response) {
+        const pedidoId = req.params.id;
+        const status = req.body;
+        await new OrderService().changeStatus(pedidoId, status);
+        res.status(204).end();
+    }
 }

@@ -2,14 +2,14 @@ import { FirebaseError } from "firebase/app";
 import { EmailAlreadyExistsError } from "../errors/email-already-exists.error.js";
 import { UnauthorizedError } from "../errors/unauthorized.error.js";
 import { getAuth } from "firebase-admin/auth";
-import { getAuth as getFirebaseAuth, sendPasswordResetEmail, signInWithEmailAndPassword } from "firebase/auth";
+import { getAuth as getFirebaseAuth, sendPasswordResetEmail, signInAnonymously, signInWithEmailAndPassword } from "firebase/auth";
 export class AuthService {
     async create(user) {
         try {
             return await getAuth().createUser({
                 email: user.email,
                 password: user.password,
-                displayName: user.nome
+                displayName: user.nome,
             });
         }
         catch (err) {
@@ -22,7 +22,7 @@ export class AuthService {
     async update(id, user) {
         const props = {
             displayName: user.nome,
-            email: user.email
+            email: user.email,
         };
         if (user.password) {
             props.password = user.password;
@@ -30,8 +30,7 @@ export class AuthService {
         await getAuth().updateUser(id, user);
     }
     async login(email, password) {
-        return await signInWithEmailAndPassword(getFirebaseAuth(), email, password)
-            .catch(err => {
+        return await signInWithEmailAndPassword(getFirebaseAuth(), email, password).catch((err) => {
             if (err instanceof FirebaseError) {
                 if (err.code === "auth/invalid-credential") {
                     throw new UnauthorizedError();
@@ -42,6 +41,9 @@ export class AuthService {
     }
     async delete(id) {
         await getAuth().deleteUser(id);
+    }
+    async signin() {
+        return signInAnonymously(getFirebaseAuth());
     }
     async recovery(email) {
         await sendPasswordResetEmail(getFirebaseAuth(), email);

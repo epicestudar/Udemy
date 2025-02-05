@@ -5,7 +5,14 @@ export class AuthController {
         const userRecord = await new AuthService().login(email, password);
         const token = await userRecord.user.getIdToken(true);
         res.send({
-            token: token
+            token: token,
+        });
+    }
+    static async signin(req, res) {
+        const userRecord = await new AuthService().signin();
+        const token = await userRecord.user.getIdToken(true);
+        res.send({
+            token: token,
         });
     }
     static async recovery(req, res) {

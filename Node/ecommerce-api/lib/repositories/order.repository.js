@@ -2,6 +2,7 @@ import { getFirestore } from "firebase-admin/firestore";
 import { orderConverter } from "../models/order-model.js";
 import dayjs from "dayjs";
 import { orderItemConverter } from "../models/order-item.model.js";
+import { NotFoundError } from "../errors/not-found.error.js";
 // import { orderItemConverter } from "../models/order-item.model.js";
 export class OrderRepository {
     collection;
@@ -48,6 +49,21 @@ export class OrderRepository {
         const pedidoRef = this.collection.doc(pedidoId);
         const snapshot = await pedidoRef.collection("items").withConverter(orderItemConverter).get();
         return snapshot.docs.map(doc => doc.data());
+    }
+    async getById(pedidoId) {
+        const order = ((await this.collection.doc(pedidoId).get()).data());
+        if (!order) {
+            throw new NotFoundError("Pedido não encontrado");
+        }
+        order.items = await this.getItems(pedidoId);
+        return order;
+    }
+    async changeStatus(pedidoId, status) {
+        await this.collection.withConverter(null).doc(pedidoId).set({
+            status: status
+        }, {
+            merge: true
+        });
     }
 }
 //# sourceMappingURL=order.repository.js.map
