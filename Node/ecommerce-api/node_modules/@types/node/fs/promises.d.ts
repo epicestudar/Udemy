@@ -71,7 +71,7 @@ declare module "fs/promises" {
         length?: number | null;
         position?: number | null;
     }
-    interface CreateReadStreamOptions {
+    interface CreateReadStreamOptions extends Abortable {
         encoding?: BufferEncoding | null | undefined;
         autoClose?: boolean | undefined;
         emitClose?: boolean | undefined;
@@ -112,7 +112,7 @@ declare module "fs/promises" {
         appendFile(
             data: string | Uint8Array,
             options?:
-                | (ObjectEncodingOptions & FlagAndOpenMode & { flush?: boolean | undefined })
+                | (ObjectEncodingOptions & Abortable)
                 | BufferEncoding
                 | null,
         ): Promise<void>;
@@ -402,7 +402,7 @@ declare module "fs/promises" {
         writeFile(
             data: string | Uint8Array,
             options?:
-                | (ObjectEncodingOptions & FlagAndOpenMode & Abortable & { flush?: boolean | undefined })
+                | (ObjectEncodingOptions & Abortable)
                 | BufferEncoding
                 | null,
         ): Promise<void>;

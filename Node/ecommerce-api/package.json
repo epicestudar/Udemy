@@ -1,33 +1,5 @@
 {
-  "name": "ecommerce-api",
-  "version": "1.0.0",
-  "exports": "./lib/index.js",
-  "type": "module",
-  "engines": {
-    "node": "20"
-  },
-  "scripts": {
-    "start": "npx tsc-watch --onSuccess \"node --env-file=.env ./lib/index.js\"",
-    "test": "echo \"Error: no test specified\" && exit 1"
-  },
-  "keywords": [],
-  "author": "",
-  "license": "ISC",
-  "description": "",
   "dependencies": {
-    "celebrate": "^15.0.3",
-    "dayjs": "^1.11.13",
-    "express": "^4.21.1",
-    "express-async-handler": "^1.2.0",
-    "file-type": "^20.0.0",
-    "firebase": "^11.2.0",
-    "firebase-admin": "^13.0.2"
-  },
-  "devDependencies": {
-    "@tsconfig/recommended": "^1.0.8",
-    "@types/express": "^5.0.0",
-    "@types/node": "^22.9.1",
-    "tsc-watch": "^6.2.1",
-    "typescript": "^5.7.3"
+    "firebase-functions": "^6.3.1"
   }
 }

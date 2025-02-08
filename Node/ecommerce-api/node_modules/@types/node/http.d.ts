@@ -162,7 +162,7 @@ declare module "http" {
         location?: string | undefined;
         "max-forwards"?: string | undefined;
         origin?: string | undefined;
-        prgama?: string | string[] | undefined;
+        pragma?: string | string[] | undefined;
         "proxy-authenticate"?: string | string[] | undefined;
         "proxy-authorization"?: string | undefined;
         "public-key-pins"?: string | undefined;
@@ -223,6 +223,7 @@ declare module "http" {
         path?: string | null | undefined;
         port?: number | string | null | undefined;
         protocol?: string | null | undefined;
+        setDefaultHeaders?: boolean | undefined;
         setHost?: boolean | undefined;
         signal?: AbortSignal | undefined;
         socketPath?: string | undefined;
