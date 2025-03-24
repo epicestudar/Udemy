@@ -1,0 +1,18 @@
+
+<button [style.width]="widthButton1" [style.backgroundColor]="'blue'">Botão 1</button>
+
+<button [style.width.px]="widthButton2" [style.backgroundColor]="'pink'">Botão 2</button>
+
+<button [style]="'width: 140px; backgroundColor: brown;'">Botão 3</button>
+
+<button [style]="{ width: '150px', backgroundColor: 'orange' }">Botão 4</button>
+
+<button [style]="stylesObj">Botão 5</button>
+
+<br />
+
+<button (click)="updateStyleObj()">Atualizar obj</button>
+
+<button (click)="updateStyleObjCorrect()">Atualizar obj correto</button>
+
+<button (click)="updateWidth()">Atualizar width</button>
