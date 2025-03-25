@@ -9,4 +9,8 @@ import { Component, Input } from '@angular/core';
 export class CardComponent {
  @Input() planType: string = '';
  @Input( {required: true} ) planPrice: number = 0;
+
+ buttonClicked(valueEmitted: boolean) {
+  console.log('buttonClicked', valueEmitted)
+ }
 }
