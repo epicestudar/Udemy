@@ -1,5 +1,5 @@
 ---
-- name: Configurar servidor de aplicação Jaba
+- name: Configurar servidor de aplicação Java
   hosts: app01
   user: vagrant
   become: yes
@@ -8,9 +8,10 @@
     dbhost: "db01"
     dbname: "notes"
     dbusername: "notesapp"
-    db_password: "devops"
+    dbpassword: "devops"
+
   tasks:
-    - name: Configurar hosts lab ansible
+    - name: Configurar /etc/hosts
       lineinfile:
         dest: /etc/hosts
         state: present
@@ -19,61 +20,97 @@
         - "192.168.56.10 control-node"
         - "192.168.56.11 app01"
         - "192.168.56.12 db01"
-    - name: Adicionar usuario de app
+
+    - name: Adicionar usuário de aplicação
       user:
         name: app
         comment: "Usuario de aplicacao"
         uid: 500
-    - name: Instalação do Maven
+
+    - name: Instalar Maven
       yum:
         name: maven
         state: latest
-    - name: Instalação do Java
+
+    - name: Instalar Java 11 JDK
       yum:
-        name: java-1.8.0-openjdk
+        name: java-11-openjdk-devel
         state: latest
-    - name: Criação do diretório de app
-      file: 
+
+    - name: Obter caminho do Java 11 JDK
+      shell: |
+        alternatives --display java | grep -o '/usr/lib/jvm/java-11[^ ]*' | head -n1
+      register: java_path
+
+    - name: Verificar se o pacote chkconfig está instalado
+      yum:
+       name: chkconfig
+       state: present
+
+    - name: Adicionar Java 11 ao sistema como alternativa
+      command: update-alternatives --install /usr/bin/java java /usr/lib/jvm/java-11-openjdk-11.0.23.0.9-2.el7_9.x86_64/bin/java 2
+
+    - name: Adicionar javac 11 como alternativa
+      command: update-alternatives --install /usr/bin/javac javac /usr/lib/jvm/java-11-openjdk-11.0.23.0.9-2.el7_9.x86_64/bin/javac 2
+
+    - name: Configurar Java 11 como padrão
+      command: update-alternatives --set java /usr/lib/jvm/java-11-openjdk-11.0.23.0.9-2.el7_9.x86_64/bin/java
+
+    - name: Configurar javac 11 como padrão
+      command: update-alternatives --set javac /usr/lib/jvm/java-11-openjdk-11.0.23.0.9-2.el7_9.x86_64/bin/javac
+
+    - name: Criar diretório da aplicação
+      file:
         path: /opt/notes
         state: directory
         owner: app
         group: app
-    - name: Clone do repositório Notes - app
+
+    - name: Instalar Git
+      yum:
+        name: git
+        state: latest
+
+    - name: Clonar repositório Notes
       git:
         repo: 'https://github.com/callicoder/spring-boot-mysql-rest-api-tutorial.git'
         dest: /opt/notes
         clone: yes
         force: yes
-    - name: Configurar arquivo de propriedades para camada de banco de dados
+
+    - name: Configurar application.properties
       template:
         src: application.properties
         dest: /opt/notes/src/main/resources/application.properties
-    - name: Gerar pacote de aplicação
+
+    - name: Gerar pacote da aplicação
       command: mvn -f /opt/notes/pom.xml package
       become_user: app
-    - name: Registrar versão atual do pacote
+
+    - name: Registrar versão do pacote
       shell:
-        cmd: mvn -o -q -Dexec.executable=echo -Dexec.args='${project.version}'
+        cmd: mvn org.apache.maven.plugins:maven-help-plugin:2.1.1:evaluate -Dexpression=project.version | grep -v '\['
         chdir: /opt/notes/
       register: app_version
-    - name: Configurar serviço do Systemd
+
+    - name: Configurar serviço notes no systemd
       template:
         src: etc/systemd/system/notes.service
         dest: /etc/systemd/system/notes.service
-        notify: reload daemon
-    - name: Iniciar serviço Notes
-      service: 
+      notify: reload daemon
+
+    - name: Iniciar serviço notes
+      service:
         name: notes
         state: restarted
 
-  roles:
-    - configuracao-default-so
-  handlers: 
+  handlers:
     - name: reload app
       systemd:
         name: notes
         state: restarted
         daemon_reload: yes
+
     - name: reload daemon
       systemd:
         daemon_reexec: yes

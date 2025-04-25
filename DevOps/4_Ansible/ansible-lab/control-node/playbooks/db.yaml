@@ -10,7 +10,7 @@
   vars:
     dbname: "db01"
     dbusername: "root"
-    db_password: "devops"
+    dbpassword: "devops"
 
   tasks:
     - name: Configurar hosts lab ansible
