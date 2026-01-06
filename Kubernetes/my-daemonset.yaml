@@ -1,0 +1,26 @@
+apiVersion: apps/v1
+kind: DaemonSet
+metadata: 
+  name: my-daemonset
+  labels:
+    app: frontend
+spec:
+  updateStrategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxUnavailable: 2
+  template:
+    metadata:
+      name: pod-web-server
+      labels:
+        apps: my-app
+        tier: frontend
+    spec:
+      containers:
+      - name: my-container-nginx
+        image: nginx:latest
+      nodeName: minikube
+  
+  selector:
+    matchLabels:
+      apps: my-app

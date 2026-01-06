@@ -1,0 +1,10 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: my-pod-webserver-hands-on
+  labels:
+    app-type: web
+spec:
+  containers:
+    - name: apache-container
+      image: httpd

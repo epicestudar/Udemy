@@ -1,0 +1,10 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: tomcat-pod
+  labels:
+    apps: app-java
+spec: 
+  containers:
+  - name: container-tomcat
+    image: tomcat:9.0

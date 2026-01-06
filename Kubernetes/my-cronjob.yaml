@@ -1,0 +1,22 @@
+apiVersion: batch/v1
+kind: CronJob
+metadata:
+  name: my-cronjob
+spec:
+  failedJobsHistoryLimit: 5
+  successfulJobsHistoryLimit: 10
+  schedule: "* * * * *"
+  jobTemplate:
+    spec:
+      completions: 10
+      completionMode: "Indexed"
+      template:
+        spec:
+          containers:
+            - name: my-container-busybox
+              image: busybox
+              command:
+                - sh
+                - -c
+                - "for i in 1 2; do echo Lucky number $i = $((1 + RANDOM % 70)); done"
+          restartPolicy: Never

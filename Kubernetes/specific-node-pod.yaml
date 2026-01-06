@@ -1,0 +1,10 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: specific-node-pod
+spec:
+  containers:
+    - name: redis
+      image: redis
+  nodeSelector: 
+    disktype: ssd

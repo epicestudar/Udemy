@@ -1,0 +1,24 @@
+kind: ConfigMap
+apiVersion: v1
+metadata:
+  name: my-cm
+data:
+  database: mongodb
+  database_uri: mongodb://localhost:27017
+
+  font.title: Arial
+  background-color: red
+  theme.1: clean
+  1theme.2: dark
+---
+kind: Pod
+apiVersion: v1
+metadata:
+  name: pod-cm-env
+spec:
+  containers:
+    - name: cm-env-container
+      image: nginx
+      envFrom:
+        - configMapRef:
+            name: my-cm

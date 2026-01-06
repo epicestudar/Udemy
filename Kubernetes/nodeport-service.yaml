@@ -1,0 +1,26 @@
+apiVersion: v1
+kind: Pod
+metadata: 
+  name: web-pod
+  labels:
+    type: web-app
+spec: 
+  containers: 
+    - name: web-server-apache
+      image: httpd
+      ports: 
+        - containerPort: 80
+---
+apiVersion: v1
+kind: Service
+metadata: 
+  name: frontend-service-nodeport
+spec: 
+  type: NodePort
+  selector: 
+    type: web-app
+  ports: 
+    - name: http
+      port: 80
+      targetPort: 80
+      nodePort: 30008
